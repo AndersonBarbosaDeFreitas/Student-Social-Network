@@ -3,6 +3,9 @@ package com.dsc.student_social_network.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,21 +22,25 @@ public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private double grade;
 
-    @OneToMany(
-            mappedBy = "course",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    private String name;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentaries = new ArrayList<>();
 
-    public Course() { super(); }
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Grade> gradeList = new ArrayList<>();
+
+    @JsonProperty("grade")
+    private double lastGradeAdd;
+
+    public Course() {
+        super();
+    }
 
     public Course(String name, double grade) {
         super();
         this.name = name;
-        this.grade = grade;
+        this.lastGradeAdd = grade;
     }
 }
