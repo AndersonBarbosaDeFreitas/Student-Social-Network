@@ -1,13 +1,16 @@
 package com.dsc.student_social_network.services;
 
+import com.dsc.student_social_network.dto.CourseDto;
 import com.dsc.student_social_network.entity.Comment;
 import com.dsc.student_social_network.entity.Course;
+import com.dsc.student_social_network.entity.Grade;
 import com.dsc.student_social_network.repository.CommentaryRepository;
 import com.dsc.student_social_network.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,63 +19,65 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    @Autowired
-    private CommentaryRepository commentaryRepository;
-
-    public Course addCourse(Course course) {
-        courseRepository.save(course);
-        return course;
+    public CourseDto addCourse(Course course) {
+        Course courseRegistered = courseRepository.saveAndFlush(course);
+        courseRegistered.getGradeList().add(new Grade(courseRegistered, courseRegistered.getLastGradeAdd()));
+        return new CourseDto(courseRepository.saveAndFlush(courseRegistered));
     }
 
-    public Course removeCourseById(int id) {
+    public CourseDto removeCourseById(int id) {
         Course course = courseRepository.findById(id).get();
         courseRepository.delete(course);
-        return course;
+
+        return new CourseDto(course);
     }
 
-    public Course getCourseById(int id) {
-        return courseRepository.findById(id).get();
+    public CourseDto getCourseById(int id) {
+        return new CourseDto(courseRepository.findById(id).get());
     }
 
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseDto> getAllCourses() {
+        List<CourseDto> courseDtos = new ArrayList<>();
+        courseRepository.findAll().forEach(course -> courseDtos.add(new CourseDto(course)));
+        return courseDtos;
     }
 
-    public List<Course> getAllCoursesByGradeDesc() {
-        return courseRepository.findAll(Sort.by(Sort.Direction.DESC, "grade"));
+    public List<CourseDto> getAllCoursesByGradeDesc() {
+        List<CourseDto> courseDtos = new ArrayList<>();
+        courseRepository.findAll(Sort.by(Sort.Direction.DESC, "grade"))
+                .forEach(course -> courseDtos.add(new CourseDto(course)));
+        return courseDtos;
     }
 
-    public Course setNameCourseById(int id, String newName) {
+    public CourseDto setNameCourseById(int id, String newName) {
         Course course = courseRepository.findById(id).get();
         course.setName(newName);
         courseRepository.save(course);
-        return course;
+        return new CourseDto(course);
     }
 
-    public Course setGradeCourseById(int id, String grade) {
+    public CourseDto setGradeCourseById(int id, Double grade) {
         Course course = courseRepository.findById(id).get();
-        course.setGrade(Double.parseDouble(grade));
-        courseRepository.save(course);
-        return course;
+        Grade newGrade = new Grade(course, grade);
+        course.getGradeList().add(newGrade);
+        return new CourseDto(courseRepository.save(course));
     }
 
-    public Course addCommentToCourseById(int courseId, Comment comment) {
+    public CourseDto addCommentToCourseById(int courseId, Comment comment) {
         Course course = courseRepository.findById(courseId).get();
         course.getCommentaries().add(comment);
         courseRepository.save(course);
-        return course;
+        return new CourseDto(course);
     }
 
-    public Course removeCommentToCourseById(int courseId, String commentId) {
+    public CourseDto removeCommentToCourseById(int courseId, String commentId) {
         Course course = courseRepository.findById(courseId).get();
-        for (Comment comment:
-             course.getCommentaries()) {
-            if(comment.getId() == Integer.parseInt(commentId)) comment.setIsRemoved(1);
+        for (Comment comment : course.getCommentaries()) {
+            if (comment.getId() == Integer.parseInt(commentId))
+                comment.setIsRemoved(1);
         }
         courseRepository.save(course);
-        List<Comment> comments = commentaryRepository.findCommentariesByCourseIdAndIsRemovedEquals(Integer.parseInt(commentId), 0).get();
-        course.setCommentaries(comments);
-        return course;
+        return new CourseDto(course);
     }
 
 }
