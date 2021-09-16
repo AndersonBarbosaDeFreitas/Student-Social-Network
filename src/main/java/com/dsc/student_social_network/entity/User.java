@@ -5,17 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Collection;
 
 @Data
 @Entity
 @Table(name = "Users")
-public class User implements UserDetails, Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -1504923514423222603L;
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +19,9 @@ public class User implements UserDetails, Serializable {
     private String email;
     private String password;
 
-    public User() { super(); }
+    public User() {
+        super();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

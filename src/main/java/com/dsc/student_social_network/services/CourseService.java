@@ -4,7 +4,6 @@ import com.dsc.student_social_network.dto.CourseDto;
 import com.dsc.student_social_network.entity.Comment;
 import com.dsc.student_social_network.entity.Course;
 import com.dsc.student_social_network.entity.Grade;
-import com.dsc.student_social_network.repository.CommentaryRepository;
 import com.dsc.student_social_network.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

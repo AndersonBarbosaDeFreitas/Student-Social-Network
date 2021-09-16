@@ -3,8 +3,6 @@ package com.dsc.student_social_network.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data

@@ -9,7 +9,6 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.UUID;
 
 @Data
 public class CourseDto {
