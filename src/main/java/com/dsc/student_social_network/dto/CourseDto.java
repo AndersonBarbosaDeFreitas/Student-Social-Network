@@ -17,11 +17,19 @@ public class CourseDto {
     private double grade;
     private List<CommentDto> commentaries = new ArrayList<>();
 
+    public CourseDto() {
+        super();
+    }
+
     public CourseDto(Course course) {
         this.id = course.getId();
         this.name = course.getName();
         this.grade = getAverageGrade(course.getGradeList());
         convertCommentaries(course.getCommentaries());
+    }
+
+    public CourseDto(String name) {
+        this.name = name;
     }
 
     private void convertCommentaries(List<Comment> commentaries) {
