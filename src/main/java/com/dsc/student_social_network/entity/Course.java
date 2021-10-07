@@ -34,6 +34,8 @@ public class Course implements Serializable {
     @JsonProperty("grade")
     private double lastGradeAdd;
 
+    private int likes;
+
     public Course() {
         super();
     }

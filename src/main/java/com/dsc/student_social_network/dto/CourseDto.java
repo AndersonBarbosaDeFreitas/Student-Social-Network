@@ -15,6 +15,7 @@ public class CourseDto {
     private int id;
     private String name;
     private double grade;
+    private int likes;
     private List<CommentDto> commentaries = new ArrayList<>();
 
     public CourseDto() {
@@ -25,6 +26,7 @@ public class CourseDto {
         this.id = course.getId();
         this.name = course.getName();
         this.grade = getAverageGrade(course.getGradeList());
+        this.likes = course.getLikes();
         convertCommentaries(course.getCommentaries());
     }
 
