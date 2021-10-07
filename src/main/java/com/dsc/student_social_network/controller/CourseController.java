@@ -29,14 +29,24 @@ public class CourseController {
         return new ResponseEntity<>(courseService.getCourseById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/ranking")
+    @GetMapping("/ranking/notas")
     public ResponseEntity<List<CourseDto>> getRankingByGrade() {
         return new ResponseEntity<>(courseService.getAllCoursesByGradeDesc(), HttpStatus.OK);
+    }
+
+    @GetMapping("/ranking/likes")
+    public ResponseEntity<List<CourseDto>> getRankingByLikes() {
+        return new ResponseEntity<>(courseService.getAllCoursesByLikesDesc(), HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<CourseDto> addCourse(@RequestBody Course newCourse) {
         return new ResponseEntity<>(courseService.addCourse(newCourse), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/likes/{id}")
+    public ResponseEntity<CourseDto> addLike(@PathVariable Integer id) {
+        return new ResponseEntity<>(courseService.addLikesToCourseById(id), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/nome")
