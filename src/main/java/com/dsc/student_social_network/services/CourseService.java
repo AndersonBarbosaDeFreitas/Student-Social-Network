@@ -57,6 +57,13 @@ public class CourseService {
         return courseDtos;
     }
 
+    public List<CourseDto> getAllCoursesByLikesDesc() {
+        List<CourseDto> courseDtos = new ArrayList<>();
+        courseRepository.findAll().forEach(course -> courseDtos.add(new CourseDto(course)));
+        courseDtos.sort(Comparator.comparing(a -> a.getLikes() * -1));
+        return courseDtos;
+    }
+
     public CourseDto setNameCourseById(int id, CourseDto courseDto) {
         if (!courseRepository.existsById(id)) {
             throw new CourseNotFoundException("Disciplina não encontrada", "CourseService.setNameCourseById");
@@ -100,6 +107,17 @@ public class CourseService {
             if (comment.getId() == Integer.parseInt(commentId))
                 comment.setIsRemoved(1);
         }
+        courseRepository.save(course);
+        return new CourseDto(course);
+    }
+
+    public CourseDto addLikesToCourseById(int id) {
+        if (!courseRepository.existsById(id)) {
+            throw new CourseNotFoundException("Disciplina não encontrada", "CourseService.addLikesToCourseById");
+        }
+
+        Course course = courseRepository.findById(id).get();
+        course.setLikes(course.getLikes() + 1);
         courseRepository.save(course);
         return new CourseDto(course);
     }
