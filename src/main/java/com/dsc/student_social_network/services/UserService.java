@@ -6,7 +6,6 @@ import com.dsc.student_social_network.exception.UserExistsException;
 import com.dsc.student_social_network.exception.UserInvalidException;
 import com.dsc.student_social_network.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,10 +26,8 @@ public class UserService {
     }
 
     public UserDto addUser(User user) {
-        if(userRepository.findByEmail(user.getEmail()).isPresent())
+        if (userRepository.findByEmail(user.getEmail()).isPresent())
             throw new UserExistsException();
-
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
         return new UserDto(user);
     }
@@ -58,6 +55,10 @@ public class UserService {
             throw new UserInvalidException();
 
         return user.get();
+    }
 
+    public boolean validateUser(User user) {
+        Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+        return (userOpt.isPresent() && userOpt.get().getPassword().equals(user.getPassword()));
     }
 }
